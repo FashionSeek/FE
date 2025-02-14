@@ -1,6 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, Image, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Linking } from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
+
+const openPinterestSearch = async () => {
+  const query = "business winter outfit";
+  const webUrl = `https://kr.pinterest.com/search/pins/?q=${encodeURIComponent(query)}`;
+
+  try {
+    await Linking.openURL(webUrl);
+  } catch (error) {
+    console.error("Pinterest 열기 오류:", error);
+    alert("Pinterest를 열 수 없습니다.");
+  }
+};
 
 const ChatDetail = ({ route }) => {
   const chatId = route?.params?.chatId || 'defaultChatId';
@@ -11,41 +25,18 @@ const ChatDetail = ({ route }) => {
     { id: '2', text: '간단한 제안서의 내용', user: 'me', isRequest: false },
   ]);
   const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false); // 로딩 상태
-  const [aiRecommendations, setAiRecommendations] = useState([]); // AI 추천 이미지 상태
-  const [selectedImage, setSelectedImage] = useState(null); // 선택된 이미지
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  // AI 추천 로딩 함수
-  const handleShowRecommendations = () => {
-    setLoading(true); // 로딩 시작
-    setAiRecommendations([]); // 이전 데이터 초기a화
-    setSelectedImage(null); // 선택 초기화
-
-    setTimeout(() => {
-      setLoading(false); // 로딩 종료
-      setAiRecommendations([
-        { id: 1, source: require('../../assets/StyleResult/ai1.jpg') },
-        { id: 2, source: require('../../assets/StyleResult/ai2.jpg') },
-        { id: 3, source: require('../../assets/StyleResult/ai3.jpg') },
-      ]); // 가라 AI 추천 이미지 설정
-    }, 5000); // 5초 로딩
+  // ✅ 갤러리에서 이미지 선택하는 함수
+  const pickImage = () => {
+    launchImageLibrary({ mediaType: 'photo' }, (response) => {
+      if (response.assets && response.assets.length > 0) {
+        setSelectedImage(response.assets[0].uri);
+      }
+    });
   };
 
-  // 이미지 클릭 핸들러
-  const handleImageClick = (imageId) => {
-    setSelectedImage(imageId);
-  };
-
-  // 메시지 전송 함수
-  const sendMessage = () => {
-    if (input.trim()) {
-      const newMessage = { id: Date.now().toString(), text: input, user: 'me', isRequest: false };
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-      setInput('');
-    }
-  };
-
-  // 요청서 클릭 이벤트
+  // ✅ 요청서 클릭 이벤트 (자세히 보기 기능)
   const toggleRequestDetails = (id) => {
     setMessages((prevMessages) =>
       prevMessages.map((msg) =>
@@ -54,29 +45,32 @@ const ChatDetail = ({ route }) => {
     );
   };
 
-  // 메시지 렌더링 함수
+  // ✅ 메시지 전송 함수 (sendMessage 복구!)
+  const sendMessage = () => {
+    if (input.trim()) {
+      const newMessage = { id: Date.now().toString(), text: input, user: 'me', isRequest: false };
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      setInput('');
+    }
+  };
+
+  // ✅ 메시지 렌더링 함수
   const renderMessage = ({ item }) => {
     const isMyMessage = item.user === 'me';
     return (
       <View style={[styles.message, isMyMessage ? styles.myMessage : styles.otherMessage]}>
         <Text style={styles.messageText}>{item.text}</Text>
-        {/* 요청서 메시지일 경우 */}
+
         {item.isRequest && (
           <>
             {!item.expanded && (
-              <TouchableOpacity
-                style={styles.detailButton}
-                onPress={() => toggleRequestDetails(item.id)}
-              >
+              <TouchableOpacity style={styles.detailButton} onPress={() => toggleRequestDetails(item.id)}>
                 <Text style={styles.detailButtonText}>자세히 보기</Text>
               </TouchableOpacity>
             )}
             {item.expanded && (
               <View style={styles.expandedContent}>
-                <Image
-                  source={require('../../assets/StyleResult/img.png')}
-                  style={styles.image}
-                />
+                <Image source={require('../../assets/StyleResult/img.png')} style={styles.image} />
                 <Text style={styles.detailText}>장소: 학교</Text>
                 <Text style={styles.detailText}>계절: winter</Text>
                 <Text style={styles.detailText}>날씨: 눈</Text>
@@ -85,9 +79,15 @@ const ChatDetail = ({ route }) => {
                 <View style={styles.separator} />
                 <Text style={styles.detailText}>체형: apple</Text>
                 <Text style={styles.detailText}>컴플렉스: 하체비만</Text>
-                {/* "가장 많이 매칭된 코디 보러가기" 버튼 */}
-                <TouchableOpacity style={styles.recommendationButton} onPress={handleShowRecommendations}>
-                  <Text style={styles.recommendationButtonText}>가장 많이 매칭된 코디 보러가기</Text>
+
+                {/* Pinterest 검색 버튼 */}
+                <TouchableOpacity style={styles.recommendationButton} onPress={openPinterestSearch}>
+                  <Text style={styles.recommendationButtonText}>Search in Pinterest</Text>
+                </TouchableOpacity>
+
+                {/* DoraCloset 버튼 */}
+                <TouchableOpacity style={styles.recommendationButton} onPress={() => navigation.navigate('DoraCloset')}>
+                  <Text style={styles.recommendationButtonText}>Seek Dora’s Closet</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -97,54 +97,34 @@ const ChatDetail = ({ route }) => {
     );
   };
 
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>{chatId}님의 채팅</Text>
       </View>
 
-      {/* 메시지 리스트 */}
+      {/* ✅ 메시지 리스트 */}
       <ScrollView contentContainerStyle={styles.messages}>
         {messages.map((item) => (
           <View key={item.id}>{renderMessage({ item })}</View>
         ))}
       </ScrollView>
 
-      {/* AI 추천 결과 (오른쪽 채팅 스타일) */}
-      {loading && (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#FF6FAF" />
-          <Text style={styles.loadingText}>AI 추천 결과를 분석 중입니다...</Text>
+      {/* ✅ 선택한 이미지 표시 */}
+      {selectedImage && (
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: selectedImage }} style={styles.previewImage} />
         </View>
-      )}
-      {!loading && aiRecommendations.length > 0 && (
-        <ScrollView horizontal contentContainerStyle={styles.recommendationContainer}>
-          {aiRecommendations.map((image) => (
-            <TouchableOpacity
-              key={image.id}
-              onPress={() => handleImageClick(image.id)}
-              style={[
-                styles.recommendationImageWrapper,
-                selectedImage === image.id && styles.selectedImageWrapper,
-              ]}
-            >
-              <Image source={image.source} style={styles.recommendationImage} />
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
       )}
 
       {/* 입력창 */}
       <View style={styles.inputContainer}>
-
-        <TouchableOpacity
-        onPress={() => navigation.navigate('DoraCloset')} >
-          <Image
-            source={require('../../assets/Closet/hanger.png')}
-            style={styles.hangerImage}
-          />
+        {/* ✅ + 버튼 클릭 시 갤러리 이동 */}
+        <TouchableOpacity onPress={pickImage} style={styles.plusButton}>
+          <Text style={styles.plusIcon}>+</Text>
         </TouchableOpacity>
+
+
         <TextInput
           style={styles.input}
           value={input}
@@ -155,33 +135,25 @@ const ChatDetail = ({ route }) => {
         <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
           <Text style={styles.sendButtonText}>전송</Text>
         </TouchableOpacity>
-
       </View>
-
-
-<View style={styles.mainButtonWrapper}>
-  <TouchableOpacity
-    style={styles.mainButton}
-    onPress={() => navigation.navigate('SetterMainPage')}>
-    <Text style={styles.mainButtonText}>메인 화면 가기</Text>
-  </TouchableOpacity>
-</View>
     </View>
   );
 };
 
-
-
-
-
 const styles = StyleSheet.create({
+image: {
+    width: 120,  // ✅ 크기 줄이기 (원하는 값으로 조정 가능)
+    height: 160, // ✅ 높이 조정
+    resizeMode: 'contain', // ✅ 원본 비율 유지하면서 축소
+    alignSelf: 'center',  // ✅ 중앙 정렬
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
   header: {
     padding: 15,
-    backgroundColor: '#FFDDE3', // 연핑크
+    backgroundColor: '#FFDDE3',
     alignItems: 'center',
   },
   headerText: {
@@ -209,14 +181,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     backgroundColor: '#f0f0f0',
   },
-  messageText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  detailButton: {
-    marginTop: 5,
-    alignSelf: 'flex-end',
-  },
   detailButtonText: {
     color: '#007bff',
     fontSize: 14,
@@ -226,19 +190,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: '#ccc',
-  },
-  detailText: {
-    fontSize: 14,
-    color: '#555',
-    marginBottom: 5,
-  },
-  image: {
-    width: '80%',
-    height: undefined,
-    aspectRatio: 4 / 3,
-    resizeMode: 'contain',
-    marginBottom: 10,
-    alignSelf: 'center',
   },
   separator: {
     marginVertical: 10,
@@ -256,76 +207,51 @@ const styles = StyleSheet.create({
     color: '#333',
     fontWeight: 'bold',
   },
-  loadingContainer: {
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: '#555',
-  },
-  recommendationContainer: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    flexDirection: 'row',
-  },
-  recommendationImageWrapper: {
-    marginRight: 10,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  selectedImageWrapper: {
-    borderColor: '#FF6FAF', // 선택된 이미지 강조 색상
-  },
-  recommendationImage: {
-    width: 100,
-    height: 100,
-    resizeMode: 'cover',
-    borderRadius: 8,
-  },
+
   inputContainer: {
-    flexDirection: 'row',
+    flexDirection: 'row', // ✅ 가로 정렬
     alignItems: 'center',
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5, // ✅ 패딩 수정
     borderTopWidth: 1,
     borderTopColor: '#ccc',
   },
+
+  plusButton: {
+    width: 40, // ✅ 더 명확한 크기 설정
+    height: 40,
+    borderRadius: 20, // ✅ 완전한 원형 유지
+    backgroundColor: '#FFDDE3',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10, // ✅ 간격 조정
+  },
+  plusIcon: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+
   input: {
-    flex: 1,
+    flex: 1, // ✅ 입력창이 최대한 가로로 확장되도록 함
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
-    padding: 10,
+    paddingHorizontal: 12, // ✅ 가로 패딩 수정
+    paddingVertical: 8, // ✅ 세로 패딩 수정
     fontSize: 16,
-    marginRight: 10,
+    marginRight: 10, // ✅ 오른쪽 간격 추가
   },
+
   sendButton: {
     backgroundColor: '#FFDDE3',
     borderRadius: 8,
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15, // ✅ 크기 줄임
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   sendButtonText: {
-    color: '#333',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  hangerImage: {
-    width: 51,
-    height: 27,
-    marginRight: 10,
-  },
-  mainButton: {
-    backgroundColor: '#FFDDE3',
-    padding: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 10,
-    marginHorizontal: 10,
-  },
-  mainButtonText: {
     color: '#333',
     fontSize: 16,
     fontWeight: 'bold',
