@@ -1,10 +1,13 @@
 
 import React, { useState, Fragment, useContext, createContext } from 'react';
-import { SafeAreaView, View, Dimensions, TextInput, TouchableOpacity, Alert, Text } from 'react-native';
+import { SafeAreaView, View, Dimensions, TextInput, TouchableOpacity, Alert, Text, StatusBar } from 'react-native';
 
 // 색상 설정
-const GREEN = '#32CD32';
-const PURPLE = '#800080';
+const PRIMARY_COLOR = '#ffe4e9';
+const WHITE = '#FFFFFF';
+const TEXT_COLOR = '#FCA0BF';
+const GRAY = '#8E8E8E';
+const LIGHT_GRAY = '#DBDBDB';
 
 // 로그인 컨텍스트 생성
 const LoginContext = createContext({
@@ -20,33 +23,56 @@ interface LoginInputProps {
   placeholder: string;
   secure?: boolean;
   onChangeText: (text: string) => void;
+  value: string;
+  showPassword?: boolean;
+  onTogglePassword?: () => void;
 }
 
 // 입력 필드 컴포넌트
-function LoginInput({ placeholder, secure = false, onChangeText }: LoginInputProps) {
+function LoginInput({ placeholder, secure = false, onChangeText, value, showPassword, onTogglePassword }: LoginInputProps) {
   const { width } = Dimensions.get('window');
 
   return (
-    <TextInput
-      style={{
-        width: width * 0.8,
-        height: 45,
-        backgroundColor: '#FFFFFF80',
-        borderWidth: 2,
-        borderColor: 'black',
-        borderRadius: 5,
-        padding: 15,
-        marginVertical: 6,
-        color: '#ffffff',
-      }}
-      placeholder={placeholder}
-      placeholderTextColor="black"
-      onChangeText={onChangeText}
-      secureTextEntry={secure}
-      autoCapitalize="none"
-      autoComplete="off"
-      autoCorrect={false}
-    />
+    <View style={{ position: 'relative' }}>
+      <TextInput
+        style={{
+          width: width * 0.85,
+          height: 50,
+          backgroundColor: WHITE,
+          borderWidth: 1,
+          borderColor: LIGHT_GRAY,
+          borderRadius: 5,
+          paddingHorizontal: 15,
+          marginVertical: 6,
+          color: TEXT_COLOR,
+          fontSize: 16,
+          paddingRight: secure ? 50 : 15,
+        }}
+        placeholder={placeholder}
+        placeholderTextColor={GRAY}
+        onChangeText={onChangeText}
+        value={value}
+        secureTextEntry={secure && !showPassword}
+        autoCapitalize="none"
+        autoComplete="off"
+        autoCorrect={false}
+      />
+      {secure && (
+        <TouchableOpacity
+          onPress={onTogglePassword}
+          style={{
+            position: 'absolute',
+            right: 15,
+            top: 15,
+            padding: 5,
+          }}
+        >
+          <Text style={{ fontSize: 18, color: TEXT_COLOR }}>
+            {showPassword ? '👁️' : '👁️‍🗨️'}
+          </Text>
+        </TouchableOpacity>
+      )}
+    </View>
   );
 }
 
@@ -83,6 +109,7 @@ export default function Login({ navigation }: LoginProps) {
   const { setLogin } = useContext(LoginContext);
   const { width, height } = Dimensions.get('window');
   const [form, setForm] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
   const request = Request();
 
   const handleLogin = async () => {
@@ -96,48 +123,108 @@ export default function Login({ navigation }: LoginProps) {
 
   return (
     <Fragment>
-      <SafeAreaView style={{ flex: 0, backgroundColor: '#D3D3D3' }} />
+      <StatusBar barStyle="dark-content" backgroundColor={WHITE} />
+      <SafeAreaView style={{ flex: 0, backgroundColor: WHITE }} />
       <SafeAreaView
         style={{
           flex: 1,
-          backgroundColor: '#D3D3D3',
+          backgroundColor: WHITE,
           alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
+        {/* 닫기 버튼 */}
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={{
-            alignSelf: 'flex-start',
-            marginTop: height * 0.02,
-            marginLeft: width * 0.03,
+            position: 'absolute',
+            top: height * 0.05,
+            right: width * 0.05,
+            zIndex: 1,
           }}
         >
-          <Text style={{ color: '#fff' }}>{"<"}</Text>
+          <Text style={{ color: TEXT_COLOR, fontSize: 20, fontWeight: 'bold' }}>✕</Text>
         </TouchableOpacity>
 
-        <View style={{ marginTop: height * 0.02 }}>
+        {/* Instagram 스타일 로고 */}
+        <View style={{ marginBottom: height * 0.03 }}>
+          <Text style={{
+            fontSize: 42,
+            fontWeight: '900',
+            color: TEXT_COLOR,
+            letterSpacing: 1.5,
+          }}>
+            FashionSeek
+          </Text>
+        </View>
+
+        {/* 입력 필드들 */}
+        <View style={{ width: width * 0.85, marginBottom: 20 }}>
           <LoginInput
-            placeholder="이메일"
+            placeholder="Phone number, username or email"
             onChangeText={(value) => setForm((prev) => ({ ...prev, email: value }))}
+            value={form.email}
           />
           <LoginInput
-            placeholder="비밀번호"
+            placeholder="Password"
             secure
             onChangeText={(value) => setForm((prev) => ({ ...prev, password: value }))}
+            value={form.password}
+            showPassword={showPassword}
+            onTogglePassword={() => setShowPassword(!showPassword)}
           />
-          <TouchableOpacity
-            style={{
-              width: width * 0.8,
-              height: 45,
-              backgroundColor: 'white',
-              borderRadius: 5,
-              marginVertical: 6,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            onPress={handleLogin}
-          >
-            <Text style={{ color: 'black', fontSize: 16, fontWeight: 'bold' }}>로그인</Text>
+        </View>
+
+        {/* 비밀번호 찾기 링크 */}
+        <TouchableOpacity style={{ alignSelf: 'flex-end', marginRight: width * 0.075, marginBottom: 20 }}>
+          <Text style={{ color: PRIMARY_COLOR, fontSize: 14, fontWeight: '500' }}>
+            Forgot password?
+          </Text>
+        </TouchableOpacity>
+
+        {/* 로그인 버튼 */}
+        <TouchableOpacity
+          style={{
+            width: width * 0.85,
+            height: 50,
+            backgroundColor: PRIMARY_COLOR,
+            borderRadius: 5,
+            marginBottom: 20,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          onPress={handleLogin}
+        >
+          <Text style={{ color: WHITE, fontSize: 16, fontWeight: 'bold' }}>Log In</Text>
+        </TouchableOpacity>
+
+        {/* OR 구분선 */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
+          <View style={{ width: width * 0.35, height: 1, backgroundColor: LIGHT_GRAY }} />
+          <Text style={{ marginHorizontal: 20, color: GRAY, fontSize: 14 }}>OR</Text>
+          <View style={{ width: width * 0.35, height: 1, backgroundColor: LIGHT_GRAY }} />
+        </View>
+
+        {/* Facebook 로그인 버튼 */}
+        <TouchableOpacity
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: height * 0.1,
+          }}
+        >
+          <Text style={{ color: PRIMARY_COLOR, fontSize: 16, fontWeight: '500' }}>
+            Continue as Carlos Bravo Guardiola
+          </Text>
+        </TouchableOpacity>
+
+        {/* 회원가입 링크 */}
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ color: TEXT_COLOR, fontSize: 14 }}>Don't have an account? </Text>
+          <TouchableOpacity>
+            <Text style={{ color: PRIMARY_COLOR, fontSize: 14, fontWeight: '500' }}>
+              Sign Up.
+            </Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>

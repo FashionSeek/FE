@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   selectedCategoryButton: {
-    backgroundColor: '#ff69b4', // 선택된 버튼 배경
+    backgroundColor: '#FCA0BF', // 선택된 버튼 배경
   },
   categoryButtonText: {
     fontSize: 14,

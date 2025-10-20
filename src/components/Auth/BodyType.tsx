@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     color: 'green',
   },
   confirmButton: {
-    backgroundColor: 'deeppink',
+    backgroundColor: '#FCA0BF',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',

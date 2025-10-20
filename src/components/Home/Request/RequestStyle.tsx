@@ -228,7 +228,7 @@ const RequestStyle = () => {
               value={isBodyPublic}
               onValueChange={(value) => setIsBodyPublic(value)}
               trackColor={{ false: "#e0e0e0", true: "#f5c6d5" }}
-              thumbColor={isBodyPublic ? "#ff69b4" : "#fff"}
+              thumbColor={isBodyPublic ? "#FCA0BF" : "#fff"}
             />
           </View>
           <View style={styles.switchRow}>
@@ -237,7 +237,7 @@ const RequestStyle = () => {
               value={isComplexPublic}
               onValueChange={(value) => setIsComplexPublic(value)}
               trackColor={{ false: "#e0e0e0", true: "#f5c6d5" }}
-              thumbColor={isComplexPublic ? "#ff69b4" : "#fff"}
+              thumbColor={isComplexPublic ? "#FCA0BF" : "#fff"}
             />
           </View>
         </View>
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
   removeButton: {
     position: 'absolute',
     right: 5,
-    backgroundColor: 'deeppink',
+    backgroundColor: '#FCA0BF',
     borderRadius: 100,
   },
   removeButtonText: {

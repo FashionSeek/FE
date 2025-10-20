@@ -33,7 +33,7 @@ const StyleResult = () => {
   return (
      <View style={styles.container}>
        {loading ? (
-         <ActivityIndicator size="large" color="deeppink" />
+         <ActivityIndicator size="large" color="#FCA0BF" />
        ) : (
          <View style={styles.resultContainer}>
            <Text style={styles.description}>당신의 스타일은</Text>
@@ -46,7 +46,7 @@ const StyleResult = () => {
                onLoad={handleImageLoad}  // 이미지 로드 완료 시 호출
              />
            ) : (
-             <ActivityIndicator size="large" color="deeppink" />
+             <ActivityIndicator size="large" color="#FCA0BF" />
            )}
          </View>
        )}
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   result: {
     fontSize: 48,
     fontWeight: 'bold',
-    color: 'deeppink',
+    color: '#FCA0BF',
     marginBottom: 10,
   },
   image: {
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
       bottom: 10,            // 하단에 고정
       left: 0,
       right: 0,
-      backgroundColor: 'deeppink',
+      backgroundColor: '#FCA0BF',
       padding: 15,
       borderRadius: 5,
       alignItems: 'center',

@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: 'deeppink',
+    color: '#FCA0BF',
   },
   input: {
     borderWidth: 1,
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   nextButton: {
-    backgroundColor: 'deeppink',
+    backgroundColor: '#FCA0BF',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',

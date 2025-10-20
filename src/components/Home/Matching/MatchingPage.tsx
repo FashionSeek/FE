@@ -9,7 +9,7 @@ import { HomeStackParams } from '../../../pages/Home'; // 네비게이션 타입
 
 
 // 색상 값 직접 지정
-const DEEPPINK = 'deeppink'; // 예시: 보라색
+const DEEPPINK = '#FCA0BF'; // 예시: 보라색
 const LIGHTGRAY = '#d3d3d3'; // 예시: 연한 회색
 const WHITE = '#FFFFFF'; // 흰색
 const GRAY = '#808080'; // 회색

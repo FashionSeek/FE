@@ -40,11 +40,11 @@ const styles = StyleSheet.create({
     lineHeight: 30, // 텍스트 간격
   },
   highlight: {
-    color: '#ff69b4', // 핑크 강조
+    color: '#FCA0BF', // 핑크 강조
     fontWeight: 'bold',
   },
   button: {
-    backgroundColor: '#ff69b4', // 핑크 배경
+    backgroundColor: '#FCA0BF', // 핑크 배경
     paddingVertical: 15, // 버튼 높이
     paddingHorizontal: 40, // 버튼 폭
     borderRadius: 30, // 둥근 버튼

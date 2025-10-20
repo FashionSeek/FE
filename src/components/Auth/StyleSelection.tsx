@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   button: {
-    backgroundColor: 'deeppink',
+    backgroundColor: '#FCA0BF',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',

@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: 'deeppink',
+    color: '#FCA0BF',
   },
   subMessage: {
     fontSize: 18,
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   button: {
-    backgroundColor: 'deeppink',
+    backgroundColor: '#FCA0BF',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',

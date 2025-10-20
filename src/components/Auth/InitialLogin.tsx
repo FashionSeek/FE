@@ -7,8 +7,8 @@ const InitialLogin = ({ setUserType = () => {} }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={{ ...styles.header, color: 'deeppink' }}>Fashion</Text>
-      <Text style={{ ...styles.header, marginBottom: 10, color: 'black' }}>Seeker</Text>
+      <Text style={{ ...styles.header, color: '#FCA0BF' }}>Fashion</Text>
+      <Text style={{ ...styles.header, marginBottom: 10, color: 'black' }}>Seek</Text>
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity

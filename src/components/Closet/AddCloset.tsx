@@ -145,9 +145,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: 'magenta',
+    color: '#FCA0BF',
     marginTop: 20,
     marginBottom: 20,
   },
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   selectedCategoryButton: {
-    backgroundColor: '#ff69b4', // 선택된 버튼 배경
+    backgroundColor: '#FCA0BF', // 선택된 버튼 배경
   },
   categoryButtonText: {
     fontSize: 14,

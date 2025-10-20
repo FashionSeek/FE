@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   addButton: {
-    backgroundColor: '#FF69B4', // 핑크색 (Add Clothes)
+    backgroundColor: '#FCA0BF', // 핑크색 (Add Clothes)
   },
   removeButton: {
     backgroundColor: '#808080', // 회색 (Remove All Clothes)

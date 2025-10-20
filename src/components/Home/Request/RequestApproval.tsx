@@ -37,7 +37,7 @@ const RequestApproval = () => {
                   style={[styles.button, styles.acceptButton]}
                   onPress={() => navigation.navigate('RequestAccepted')}
                 >
-                  <Text style={[styles.buttonText, { color: '#ff69b4' }]}>수락</Text>
+                  <Text style={[styles.buttonText, { color: '#FCA0BF' }]}>수락</Text>
                 </TouchableOpacity>
               </View>
 
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
    acceptButton: {
      backgroundColor: '#ffe4e9', // 연한 핑크색
      borderWidth: 1,
-     borderColor: '#ff69b4', // 테두리 핑크색
+     borderColor: '#FCA0BF', // 테두리 핑크색
      paddingHorizontal: 20, // 수평 패딩 추가 (거절과 균일하게)
    },
    buttonText: {

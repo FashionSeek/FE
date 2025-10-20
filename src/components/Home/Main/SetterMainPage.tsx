@@ -21,7 +21,7 @@ const SetterMainPage = () => {
           size={100} // 원 크기
           progress={0.2} // 진행률 (0~1 사이 값)
           thickness={8} // 원 테두리 두께
-          color="#ff69b4" // 진행된 부분 색상
+          color="#FCA0BF" // 진행된 부분 색상
           unfilledColor="#e0e0e0" // 미진행 부분 색상
           showsText={false} // 기본 텍스트 비활성화
         />
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 36,
     fontWeight: '900',
-    color: '#ff69b4',
+    color: '#FCA0BF',
     marginBottom: 10,
   },
   subHeader: {
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
      position: 'absolute', // 부모 뷰의 중앙에 배치
      fontSize: 18, // 텍스트 크기
      fontWeight: 'bold', // 굵은 텍스트
-     color: '#ff69b4', // 핑크 텍스트
+     color: '#FCA0BF', // 핑크 텍스트
    },
  });
 

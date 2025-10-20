@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 35,
-    color: 'black',
+    color: '#8E8E8E',
   },
   sectionTitle: {
     fontSize: 18,
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     margin: 5,
-    backgroundColor: 'red',
+    backgroundColor: '#ffe4e9',
   },
 
 });
